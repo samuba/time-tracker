@@ -7,6 +7,7 @@
     "build": "svite build -ts"
   },
   "dependencies": {
+    "date-fns": "^2.16.1",
     "firebase": "^8.2.5"
   },
   "devDependencies": {
