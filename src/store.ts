@@ -52,7 +52,7 @@ export const currentTime = createCurrentTime();
 
 function createTimes() {
     const { subscribe, set, update } = writable([] as Time[]);
-    times.onSnapshot(ss => {
+    times.orderBy("start", "desc").onSnapshot(ss => {
         const times = ss.docs.map(x => extractData(x))
         set(times);
     })

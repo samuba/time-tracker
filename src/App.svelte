@@ -1,20 +1,40 @@
 <script lang="ts">
   import { addTime, deleteTime, theTimes, currentTime } from "./store";
-  import { format, formatDistanceToNowStrict, formatDistanceStrict } from "date-fns";
+  import {
+    format,
+    formatDistanceToNowStrict,
+    formatDistanceStrict,
+formatDuration,
+  } from "date-fns";
   import { onDestroy } from "svelte";
 
   let since = "";
+  let overall = "";
+
+  const calculateOverall = (times: Time[]) => {
+    if (!times.length) return "";
+    const accumulatedTimes = times
+      .map((x) => {
+        const end = x.end || new Date();
+        return <any>end - <any>x.start;
+      })
+      .reduce((p, c, index, arr) => p + c);    
+    return formatDistanceStrict(0, accumulatedTimes);
+  };
 
   const interval = setInterval(() => {
-    if (!$currentTime.start) return since = "";
-    since = formatDistanceToNowStrict($currentTime.start);
+    since = $currentTime.start ? formatDistanceToNowStrict($currentTime.start) : "";
+    overall = calculateOverall($theTimes)
   }, 1000);
   onDestroy(() => clearInterval(interval));
 
   function formatPastTime(time) {
-    if (!time.start) return
-    if (!time.end) return "no end"
-    return `${formatDistanceStrict(time.start, time.end)} (${format(time.start, "HH:mm")} - ${time.end && format(time.end, "HH:mm")})`
+    if (!time.start) return;
+    if (!time.end) return "no end";
+    return `${formatDistanceStrict(time.start, time.end)} (${format(
+      time.start,
+      "HH:mm"
+    )} - ${time.end && format(time.end, "HH:mm")})`;
   }
 </script>
 
@@ -40,7 +60,7 @@
     {/if}
 
     <div class="mt-10">
-      <h2 class="text-lg">All times</h2>
+      <h2 class="text-lg">All times (overall: {overall})</h2>
 
       {#each $theTimes as time}
         <div class="bg-gray-100 p-2 px-4 mb-4">
