@@ -11,7 +11,7 @@ formatDuration,
   let since = "";
   let overall = "";
 
-  const calculateOverall = (times: Time[]) => {
+  const calculateOverall = (times: Time[]) => { // todo: format 01:20 hours
     if (!times.length) return "";
     const accumulatedTimes = times
       .map((x) => {
@@ -50,7 +50,7 @@ formatDuration,
         Start Timer
       </button>
     {:else}
-      <p>{since} (since {format($currentTime.start, "HH:mm")})</p>
+      <p>Current Time: {since} (since {format($currentTime.start, "HH:mm")})</p>
       <button
         class="border-gray-300 border rounded p-2"
         on:click={currentTime.stop}
@@ -62,7 +62,7 @@ formatDuration,
     <div class="mt-10">
       <h2 class="text-lg">All times (overall: {overall})</h2>
 
-      {#each $theTimes as time}
+      {#each $theTimes.filter(x => x.end != null) as time}
         <div class="bg-gray-100 p-2 px-4 mb-4">
           <span>{formatPastTime(time)}</span>
           <button

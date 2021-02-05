@@ -24,6 +24,8 @@ export type Time = {
 }
 export type NewTime = Omit<Time, "id">
 
+
+// todo: use convert function to convert to own data model
 function extractData(snapshot) {
     const data = snapshot.data()
     data.start = data.start ? data.start.toDate() : null
@@ -31,10 +33,15 @@ function extractData(snapshot) {
     return { id: snapshot.id, ...data } as Time
 }
 
-
-// todo: get currentTime from store if already exists
 function createCurrentTime() {
     const { subscribe, set, update } = writable({ start: null, end: null } as Time);
+    times.where("end", "==", null).onSnapshot(ss => {
+        if (!ss.empty) {
+            const timesWithNoEnd = ss.docs.map(x => extractData(x))
+            console.log({ timesWithNoEnd }) 
+            set(timesWithNoEnd[0])
+        }
+    })
     return {
         subscribe,
         start: async () => {
