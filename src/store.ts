@@ -33,7 +33,7 @@ function extractData(snapshot) {
     return { id: snapshot.id, ...data } as Time
 }
 
-function createCurrentTime() {
+function createCurrentTime() { 
     const { subscribe, set, update } = writable({ start: null, end: null } as Time);
     times.where("end", "==", null).onSnapshot(ss => {
         if (!ss.empty) {
@@ -44,7 +44,7 @@ function createCurrentTime() {
     })
     return {
         subscribe,
-        start: async () => {
+        start: async () => { // todo: rename methods because they are confusing with time.start props
             set(await addTime({ start: new Date(), end: null }))
         },
         stop: () => update(n => {

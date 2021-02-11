@@ -2,29 +2,39 @@
   import { addTime, deleteTime, theTimes, currentTime } from "./store";
   import {
     format,
-    formatDistanceToNowStrict,
     formatDistanceStrict,
-formatDuration,
+    intervalToDuration,
+isToday,
   } from "date-fns";
   import { onDestroy } from "svelte";
 
   let since = "";
   let overall = "";
 
-  const calculateOverall = (times: Time[]) => { // todo: format 01:20 hours
+  const calculateOverall = (times: Time[]) => {
     if (!times.length) return "";
     const accumulatedTimes = times
-      .map((x) => {
-        const end = x.end || new Date();
-        return <any>end - <any>x.start;
-      })
-      .reduce((p, c, index, arr) => p + c);    
-    return formatDistanceStrict(0, accumulatedTimes);
+      .map((x) => (x.end || new Date()) - x.start)
+      .reduce((p, c, index, arr) => p + c);
+    return formatDuration(accumulatedTimes);
   };
 
+  const formatDuration = (milliseconds) => {
+    const normalizeTime = (time) => (time < 10 ? `0${time}` : time);
+    let { seconds, minutes, hours, days, months } = intervalToDuration({
+      start: 0,
+      end: milliseconds,
+    });
+    days += months ? Math.round(months * 30) : 0;
+    hours += days ? Math.round(days * 24) : 0;
+    return `${normalizeTime(hours)}:${normalizeTime(minutes)}:${normalizeTime(
+      seconds
+    )}`;
+  }
+
   const interval = setInterval(() => {
-    since = $currentTime.start ? formatDistanceToNowStrict($currentTime.start) : "";
-    overall = calculateOverall($theTimes)
+    since = formatDuration(Number(new Date()) - Number($currentTime.start))
+    overall = calculateOverall($theTimes);
   }, 1000);
   onDestroy(() => clearInterval(interval));
 
@@ -50,7 +60,7 @@ formatDuration,
         Start Timer
       </button>
     {:else}
-      <p>Current Time: {since} (since {format($currentTime.start, "HH:mm")})</p>
+      <p>Current Time: {since} (since { isToday($currentTime.start) ? "today " + format($currentTime.start, "HH:mm") : format($currentTime.start, "dd.MM.yyyy HH:mm")})</p>
       <button
         class="border-gray-300 border rounded p-2"
         on:click={currentTime.stop}
@@ -62,7 +72,7 @@ formatDuration,
     <div class="mt-10">
       <h2 class="text-lg">All times (overall: {overall})</h2>
 
-      {#each $theTimes.filter(x => x.end != null) as time}
+      {#each $theTimes.filter((x) => x.end != null) as time}
         <div class="bg-gray-100 p-2 px-4 mb-4">
           <span>{formatPastTime(time)}</span>
           <button
