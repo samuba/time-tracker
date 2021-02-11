@@ -4,7 +4,7 @@
     format,
     formatDistanceStrict,
     intervalToDuration,
-isToday,
+    isToday,
   } from "date-fns";
   import { onDestroy } from "svelte";
 
@@ -30,21 +30,22 @@ isToday,
     return `${normalizeTime(hours)}:${normalizeTime(minutes)}:${normalizeTime(
       seconds
     )}`;
-  }
+  };
 
   const interval = setInterval(() => {
-    since = formatDuration(Number(new Date()) - Number($currentTime.start))
+    since = formatDuration(Number(new Date()) - Number($currentTime.start));
     overall = calculateOverall($theTimes);
   }, 1000);
   onDestroy(() => clearInterval(interval));
 
-  function formatPastTime(time) {
+  function formatPastTime(time: Time) {
     if (!time.start) return;
     if (!time.end) return "no end";
-    return `${formatDistanceStrict(time.start, time.end)} (${format(
-      time.start,
-      "HH:mm"
-    )} - ${time.end && format(time.end, "HH:mm")})`;
+    const duration = Number(time.end) - Number(time.start);
+    const timeFormat = (date: Date) => format(date, "HH:mm dd.MM.yyyy");
+    return `${formatDuration(duration)} (${timeFormat(time.start)} - ${
+      time.end && timeFormat(time.end)
+    })`;
   }
 </script>
 
@@ -60,7 +61,11 @@ isToday,
         Start Timer
       </button>
     {:else}
-      <p>Current Time: {since} (since { isToday($currentTime.start) ? "today " + format($currentTime.start, "HH:mm") : format($currentTime.start, "dd.MM.yyyy HH:mm")})</p>
+      <p>
+        Current Time: {since} (since {isToday($currentTime.start)
+          ? "today " + format($currentTime.start, "HH:mm")
+          : format($currentTime.start, "dd.MM.yyyy HH:mm")})
+      </p>
       <button
         class="border-gray-300 border rounded p-2"
         on:click={currentTime.stop}
@@ -72,7 +77,7 @@ isToday,
     <div class="mt-10">
       <h2 class="text-lg">All times (overall: {overall})</h2>
 
-      {#each $theTimes.filter((x) => x.end != null) as time}
+      {#each $theTimes.filter((x) => x.end != null) as time (time.start)}
         <div class="bg-gray-100 p-2 px-4 mb-4">
           <span>{formatPastTime(time)}</span>
           <button
