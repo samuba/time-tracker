@@ -77,3 +77,7 @@ export function deleteTime(id: string) {
     console.log("delete time: " + id)
     return times.doc(id).delete();
 }
+
+export function updateTime(id: string, time: Partial<Time>) {
+    return times.doc(id).update(time)
+}
