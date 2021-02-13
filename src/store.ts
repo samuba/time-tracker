@@ -71,8 +71,9 @@ export function addTime(time: NewTime) {
 }
 
 export function deleteTime(id: string) {
-    console.log("delete time: " + id)
-    return times.doc(id).delete();
+    if (confirm("Do you really want to delete that time frame?")) {
+        return times.doc(id).delete();
+    }
 }
 
 export function updateTime(id: string, time: Partial<Time>) {
