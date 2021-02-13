@@ -33,12 +33,12 @@ function extractData(snapshot) {
     return { id: snapshot.id, ...data } as Time
 }
 
-function createCurrentTime() { 
+function createCurrentTime() {
     const { subscribe, set, update } = writable({ start: null, end: null } as Time);
     times.where("end", "==", null).onSnapshot(ss => {
         if (!ss.empty) {
             const timesWithNoEnd = ss.docs.map(x => extractData(x))
-            console.log({ timesWithNoEnd }) 
+            console.log({ timesWithNoEnd })
             set(timesWithNoEnd[0])
         }
     })
@@ -81,3 +81,25 @@ export function deleteTime(id: string) {
 export function updateTime(id: string, time: Partial<Time>) {
     return times.doc(id).update(time)
 }
+
+
+export interface User extends firebase.User {
+    jwt: string
+}
+
+function createCurrentUser() {
+    const { subscribe, set } = writable(undefined as User | undefined)
+    firebase.auth().onAuthStateChanged(async (user) => {
+        if (user) {
+            set({ ...user, jwt: await user.getIdToken() })
+        } else {
+            set(undefined)
+        }
+    }, error => console.log("error while auth state changed", error));
+    return { 
+        subscribe, 
+        logout: async () => await firebase.auth().signOut()
+    }
+}
+export const currentUser = createCurrentUser();
+

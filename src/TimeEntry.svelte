@@ -4,9 +4,8 @@
     import type { Time } from "./store";
     import flatpickr from "flatpickr";
     import "flatpickr/dist/flatpickr.css";
-    import { tick } from "svelte";
-    import type { Instance } from "flatpickr/dist/types/instance";
     import type { BaseOptions } from "flatpickr/dist/types/options";
+    import { tick } from "svelte";
 
     export let time: Time;
 

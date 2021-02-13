@@ -1,9 +1,10 @@
 <script lang="ts">
-  import { addTime, theTimes, currentTime } from "./store";
+  import { addTime, theTimes, currentTime, currentUser } from "./store";
   import { format, intervalToDuration, isToday } from "date-fns";
   import { onDestroy } from "svelte";
   import type { Time } from "./store";
   import TimeEntry from "./TimeEntry.svelte";
+  import Login from "./Login.svelte";
 
   let since = "";
   let overall = "";
@@ -34,39 +35,50 @@
   onDestroy(() => clearInterval(interval));
 </script>
 
-<div class="flex justify-center pt-8">
-  <div class="max-w-md">
-    <h1 class="text-2xl">Time-Tracker</h1>
+{#if !$currentUser}
+  <Login />
+{:else}
+  <button
+    class="border-gray-300 border rounded p-2 float-right mr-4 mt-4"
+    on:click={currentUser.logout}
+  >
+    Logout
+  </button>
 
-    {#if !$currentTime.start}
-      <button
-        class="border-gray-300 border rounded p-2"
-        on:click={currentTime.start}
-      >
-        Start Timer
-      </button>
-    {:else}
-      <p>
-        Current Time: {since} (since {isToday($currentTime.start)
-          ? "today " + format($currentTime.start, "HH:mm")
-          : format($currentTime.start, "dd.MM.yyyy HH:mm")})
-      </p>
-      <button
-        class="border-gray-300 border rounded p-2"
-        on:click={currentTime.stop}
-      >
-        Stop Timer
-      </button>
-    {/if}
+  <div class="flex justify-center pt-8">
+    <div class="max-w-md">
+      <h1 class="text-2xl">Time-Tracker</h1>
 
-    <div class="mt-10">
-      <h2 class="text-lg">All times (overall: {overall})</h2>
-
-      {#each $theTimes.filter((x) => x.end != null) as time (time.start)}
-        <TimeEntry {time} />
+      {#if !$currentTime.start}
+        <button
+          class="border-gray-300 border rounded p-2"
+          on:click={currentTime.start}
+        >
+          Start Timer
+        </button>
       {:else}
-        No Data yet..
-      {/each}
+        <p>
+          Current Time: {since} (since {isToday($currentTime.start)
+            ? "today " + format($currentTime.start, "HH:mm")
+            : format($currentTime.start, "dd.MM.yyyy HH:mm")})
+        </p>
+        <button
+          class="border-gray-300 border rounded p-2"
+          on:click={currentTime.stop}
+        >
+          Stop Timer
+        </button>
+      {/if}
+
+      <div class="mt-10">
+        <h2 class="text-lg">All times (overall: {overall})</h2>
+
+        {#each $theTimes.filter((x) => x.end != null) as time (time.start)}
+          <TimeEntry {time} />
+        {:else}
+          No Data yet..
+        {/each}
+      </div>
     </div>
   </div>
-</div>
+{/if}
