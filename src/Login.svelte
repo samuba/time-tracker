@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { currentUser } from "./store";
+    import { currentUser } from "./userStore";
     import { tick } from "svelte";
     import * as firebaseui from "firebaseui";
     import "firebaseui/dist/firebaseui.css";
