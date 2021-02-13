@@ -34,7 +34,6 @@ function createCurrentTime() {
         times.where("userId", "==", userId).where("end", "==", null).onSnapshot(ss => {
             if (!ss.empty) {
                 const timesWithNoEnd = ss.docs.map(x => extractData(x))
-                console.log({ timesWithNoEnd })
                 set(timesWithNoEnd[0])
             }
         })

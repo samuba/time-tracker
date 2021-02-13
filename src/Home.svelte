@@ -11,6 +11,32 @@
     let overall = "";
 
     $: pastTimes = $allTimes.filter((x) => x.end != null);
+    $: days = getDays(pastTimes);
+
+    const getDays = (times) => {
+        const days: Day[] = [];
+        
+        console.log("oast", times);
+        times.forEach((time) => {
+            const day = days.filter(
+                (x) => x.text === format(time.start, "dd.MM.yyyy")
+            )?.[0];
+            const overallMs = Number(time.end) - Number(time.start);
+            if (day) {
+                day.times.push(time);
+                day.overallMs += overallMs;
+                day.overall = formatDuration(day.overallMs);
+            } else {
+                days.push({
+                    text: format(time.start, "dd.MM.yyyy"),
+                    times: [time],
+                    overallMs,
+                    overall: formatDuration(overallMs),
+                });
+            }
+        });
+        return days;
+    };
 
     const calculateOverall = (times: Time[]) => {
         if (!times.length) return "";
@@ -38,6 +64,23 @@
         overall = calculateOverall($allTimes);
     }, 1000);
     onDestroy(() => clearInterval(interval));
+
+    type Day = {
+        text: string;
+        overall: string;
+        overallMs: number;
+        times: Time[];
+    };
+
+    type Week = {
+        text: String;
+        days: Day[];
+    }
+
+    type Month = {
+        text: String;
+        weeks: Week[];
+    }
 </script>
 
 <div class="w-full flex justify-between p-4">
@@ -60,10 +103,20 @@
 
         {#if pastTimes.length > 0}
             <div class="mt-10">
-                <h2 class="text-lg">All times (overall: {overall})</h2>
+                <h2 class="text-lg">Overall: {overall}</h2>
 
-                {#each pastTimes as time (time.start)}
-                    <TimeEntry {time} />
+                {#each days as day}
+                    <div class="bg-gray-50 border mt-4 p-4">
+                        <div class="text-lg flex justify-between">
+                            <span class="font-semibold">{day.text}</span>
+                            {day.overall}
+                        </div>
+                        <div>
+                            {#each day.times as time (time.start)}
+                                <TimeEntry {time} />
+                            {/each}
+                        </div>
+                    </div>
                 {/each}
             </div>
         {/if}

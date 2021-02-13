@@ -32,10 +32,10 @@
         if (!time.start) return;
         if (!time.end) return "no end";
         const duration = Number(time.end) - Number(time.start);
-        const timeFormat = (date: Date) => format(date, "HH:mm dd.MM.yyyy");
-        return `${formatDuration(duration)} (${timeFormat(time.start)} - ${
+        const timeFormat = (date: Date) => format(date, "HH:mm");
+        return `${timeFormat(time.start)} - ${
             time.end && timeFormat(time.end)
-        })`;
+        }  (${formatDuration(duration)})`;
     }
 
     const formatDuration = (milliseconds) => {
@@ -60,7 +60,7 @@
     };
 </script>
 
-<div class="bg-gray-100 p-2 px-4 mb-4">
+<div class="mt-2">
     {#if editMode}
         <div>
             <label for={"start-" + time.id}>Start</label>
@@ -78,8 +78,10 @@
         </div>
         <Button text="Save" on:click={() => save(start, end)} />
     {:else}
-        <div>{formatPastTime(time)}</div>
-        <Button text="delete" on:click={() => deleteTime(time.id)} />
-        <Button text="edit" on:click={() => (editMode = true)} />
+        <div>
+            {formatPastTime(time)}
+            <span on:click={() => deleteTime(time.id)} class="ml-4 underline cursor-pointer" >delete</span>
+            <span on:click={() => (editMode = true)} class="ml-2 underline cursor-pointer">edit</span>
+        </div>
     {/if}
 </div>
