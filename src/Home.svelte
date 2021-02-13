@@ -8,10 +8,10 @@
     import Button from "./Button.svelte";
 
     let since = "";
-    let overall = "";
 
     $: pastTimes = $allTimes.filter((x) => x.end != null);
     $: days = getDays(pastTimes);
+    $: overall = calculateOverall($allTimes)
 
     const getDays = (times) => {
         const days: Day[] = [];
@@ -58,6 +58,7 @@
     };
 
     const interval = setInterval(() => {
+        if (!$currentTime.start) return;
         since = formatDuration(Number(new Date()) - Number($currentTime.start));
         overall = calculateOverall($allTimes);
     }, 1000);
