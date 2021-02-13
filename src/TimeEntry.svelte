@@ -6,12 +6,13 @@
     import "flatpickr/dist/flatpickr.css";
     import type { BaseOptions } from "flatpickr/dist/types/options";
     import { tick } from "svelte";
+    import Button from "./Button.svelte";
 
     export let time: Time;
 
     let editMode = false;
-    let start = new Date(time.start.getTime());
-    let end = new Date(time.end.getTime());
+    let start = String(new Date(time.start.getTime()));
+    let end = String(new Date(time.end.getTime()));
 
     $: if (editMode) tick().then(() => initPickers());
 
@@ -23,10 +24,8 @@
             altFormat: "H:i d.m.Y",
             dateFormat: "Z",
         } as BaseOptions;
-        const startPicker = flatpickr("#start-" + time.id, options);
-        const endPicker = flatpickr("#end-" + time.id, options);
-        startPicker.setDate(time.start);
-        endPicker.setDate(time.end);
+        flatpickr("#start-" + time.id, options);
+        flatpickr("#end-" + time.id, options);
     };
 
     function formatPastTime(time: Time) {
@@ -74,25 +73,13 @@
                 id={"end-" + time.id}
             />
         </div>
-        <button
+        <Button
+            text="Save"
             on:click={() => save(new Date(start), new Date(end))}
-            class="border-gray-300 border rounded p-2"
-        >
-            Save
-        </button>
+        />
     {:else}
         <div>{formatPastTime(time)}</div>
-        <button
-            class="border-gray-300 border rounded p-2"
-            on:click={() => deleteTime(time.id)}
-        >
-            delete
-        </button>
-        <button
-            on:click={() => (editMode = true)}
-            class="border-gray-300 border rounded p-2"
-        >
-            edit
-        </button>
+        <Button text="delete" on:click={() => deleteTime(time.id)} />
+        <Button text="edit" on:click={() => (editMode = true)} />
     {/if}
 </div>

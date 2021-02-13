@@ -5,6 +5,7 @@
   import type { Time } from "./store";
   import TimeEntry from "./TimeEntry.svelte";
   import Login from "./Login.svelte";
+  import Button from "./Button.svelte";
 
   let since = "";
   let overall = "";
@@ -38,36 +39,25 @@
 {#if !$currentUser}
   <Login />
 {:else}
-  <button
-    class="border-gray-300 border rounded p-2 float-right mr-4 mt-4"
+  <Button
     on:click={currentUser.logout}
-  >
-    Logout
-  </button>
+    text="Logout"
+    class="float-right mr-4 mt-4"
+  />
 
   <div class="flex justify-center pt-8">
     <div class="max-w-md">
       <h1 class="text-2xl">Time-Tracker</h1>
 
       {#if !$currentTime.start}
-        <button
-          class="border-gray-300 border rounded p-2"
-          on:click={currentTime.start}
-        >
-          Start Timer
-        </button>
+        <Button text="Start Timer" on:click={currentTime.start} />
       {:else}
         <p>
           Current Time: {since} (since {isToday($currentTime.start)
             ? "today " + format($currentTime.start, "HH:mm")
             : format($currentTime.start, "dd.MM.yyyy HH:mm")})
         </p>
-        <button
-          class="border-gray-300 border rounded p-2"
-          on:click={currentTime.stop}
-        >
-          Stop Timer
-        </button>
+        <Button text="Stop Timer" on:click={currentTime.stop} />
       {/if}
 
       <div class="mt-10">
