@@ -15,8 +15,6 @@
 
     const getDays = (times) => {
         const days: Day[] = [];
-        
-        console.log("oast", times);
         times.forEach((time) => {
             const day = days.filter(
                 (x) => x.text === format(time.start, "dd.MM.yyyy")
@@ -42,7 +40,7 @@
         if (!times.length) return "";
         const accumulatedTimes = times
             .map((x) => Number(x.end || new Date()) - Number(x.start))
-            .reduce((p, c, index, arr) => p + c);
+            .reduce((p, c) => p + c);
         return formatDuration(accumulatedTimes);
     };
 
@@ -75,12 +73,12 @@
     type Week = {
         text: String;
         days: Day[];
-    }
+    };
 
     type Month = {
         text: String;
         weeks: Week[];
-    }
+    };
 </script>
 
 <div class="w-full flex justify-between p-4">
@@ -90,24 +88,30 @@
 
 <div class="flex justify-center pt-8">
     <div class="max-w-md">
-        {#if !$currentTime.start}
-            <Button text="Start Timer" on:click={currentTime.start} />
-        {:else}
-            <p>
-                Current Time: {since} (since {isToday($currentTime.start)
-                    ? "today " + format($currentTime.start, "HH:mm")
-                    : format($currentTime.start, "dd.MM.yyyy HH:mm")})
-            </p>
-            <Button text="Stop Timer" on:click={currentTime.stop} />
-        {/if}
+        <div class="flex">
+            {#if !$currentTime.start}
+                <Button text="Start Timer" on:click={currentTime.start}  class="text-2xl px-4 py-2" />
+            {:else}
+                <Button
+                    text="Stop Timer"
+                    on:click={currentTime.stop}
+                    class="text-2xl px-4 py-2"
+                />
+                <div class="ml-8 mt-4">
+                    Current Time: <span class="font-mono">{since}</span> 
+                </div>
+            {/if}
+        </div>
 
         {#if pastTimes.length > 0}
             <div class="mt-10">
-                <h2 class="text-lg">Overall: {overall}</h2>
+                <h2 class="text-xl">
+                    Overall: <span class="font-mono">{overall}</span>
+                </h2>
 
                 {#each days as day}
                     <div class="bg-gray-50 border mt-4 p-4">
-                        <div class="text-lg flex justify-between">
+                        <div class="text-lg flex justify-between font-mono">
                             <span class="font-semibold">{day.text}</span>
                             {day.overall}
                         </div>
