@@ -10,6 +10,8 @@
     let since = "";
     let overall = "";
 
+    $: pastTimes = $allTimes.filter((x) => x.end != null);
+
     const calculateOverall = (times: Time[]) => {
         if (!times.length) return "";
         const accumulatedTimes = times
@@ -38,16 +40,13 @@
     onDestroy(() => clearInterval(interval));
 </script>
 
-<Button
-    on:click={currentUser.logout}
-    text={"logout " + $currentUser.email}
-    class="float-right mr-4 mt-4"
-/>
+<div class="w-full flex justify-between p-4">
+    <div class="text-2xl">Time-Tracker</div>
+    <Button on:click={currentUser.logout} text="Logout" />
+</div>
 
 <div class="flex justify-center pt-8">
     <div class="max-w-md">
-        <h1 class="text-2xl">Time-Tracker</h1>
-
         {#if !$currentTime.start}
             <Button text="Start Timer" on:click={currentTime.start} />
         {:else}
@@ -59,14 +58,14 @@
             <Button text="Stop Timer" on:click={currentTime.stop} />
         {/if}
 
-        <div class="mt-10">
-            <h2 class="text-lg">All times (overall: {overall})</h2>
+        {#if pastTimes.length > 0}
+            <div class="mt-10">
+                <h2 class="text-lg">All times (overall: {overall})</h2>
 
-            {#each $allTimes.filter((x) => x.end != null) as time (time.start)}
-                <TimeEntry {time} />
-            {:else}
-                No Data yet..
-            {/each}
-        </div>
+                {#each pastTimes as time (time.start)}
+                    <TimeEntry {time} />
+                {/each}
+            </div>
+        {/if}
     </div>
 </div>

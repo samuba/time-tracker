@@ -13,6 +13,7 @@ export type Time = {
     id: string,
     start: Date,
     end: Date,
+    userId: string,
 }
 export type NewTime = Omit<Time, "id">
 
@@ -27,17 +28,21 @@ function extractData(snapshot) {
 
 function createCurrentTime() {
     const { subscribe, set, update } = writable({ start: null, end: null } as Time);
-    currentUser.authenticated(() => times.where("end", "==", null).onSnapshot(ss => {
-        if (!ss.empty) {
-            const timesWithNoEnd = ss.docs.map(x => extractData(x))
-            console.log({ timesWithNoEnd })
-            set(timesWithNoEnd[0])
-        }
-    }))
+    let userId = "";
+    currentUser.authenticated(user => {
+        userId = user.uid;
+        times.where("end", "==", null).onSnapshot(ss => {
+            if (!ss.empty) {
+                const timesWithNoEnd = ss.docs.map(x => extractData(x))
+                console.log({ timesWithNoEnd })
+                set(timesWithNoEnd[0])
+            }
+        })
+    })
     return {
         subscribe,
         start: async () => { // todo: rename methods because they are confusing with time.start props
-            set(await addTime({ start: new Date(), end: null }))
+            set(await addTime({ start: new Date(), end: null, userId }))
         },
         stop: () => update(n => {
             const end = new Date();
@@ -50,10 +55,12 @@ export const currentTime = createCurrentTime();
 
 function createTimes() {
     const { subscribe, set } = writable([] as Time[]);
-    currentUser.authenticated(() => times.orderBy("start", "desc").onSnapshot(ss => {
-        const times = ss.docs.map(x => extractData(x))
-        set(times);
-    }))
+    currentUser.authenticated(user => {
+        times.where("userId", "==", user.uid).orderBy("start", "desc").onSnapshot(ss => {
+            const times = ss.docs.map(x => extractData(x))
+            set(times);
+        })
+    })
     return { subscribe };
 }
 export const allTimes = createTimes()
