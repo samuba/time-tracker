@@ -31,7 +31,7 @@ function createCurrentTime() {
     let userId = "";
     currentUser.authenticated(user => {
         userId = user.uid;
-        times.where("end", "==", null).onSnapshot(ss => {
+        times.where("userId", "==", userId).where("end", "==", null).onSnapshot(ss => {
             if (!ss.empty) {
                 const timesWithNoEnd = ss.docs.map(x => extractData(x))
                 console.log({ timesWithNoEnd })
