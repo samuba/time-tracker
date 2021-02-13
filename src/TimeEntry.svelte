@@ -11,8 +11,8 @@
     export let time: Time;
 
     let editMode = false;
-    let start = String(new Date(time.start.getTime()));
-    let end = String(new Date(time.end.getTime()));
+    let start = String(time.start);
+    let end = String(time.end);
 
     $: if (editMode) tick().then(() => initPickers());
 
@@ -51,9 +51,12 @@
         )}`;
     };
 
-    const save = async (start: Date, end: Date) => {
+    const save = async (start: string, end: string) => {
         editMode = false;
-        await updateTime(time.id, { start, end });
+        await updateTime(time.id, {
+            start: new Date(start),
+            end: new Date(end),
+        });
     };
 </script>
 
@@ -73,10 +76,7 @@
                 id={"end-" + time.id}
             />
         </div>
-        <Button
-            text="Save"
-            on:click={() => save(new Date(start), new Date(end))}
-        />
+        <Button text="Save" on:click={() => save(start, end)} />
     {:else}
         <div>{formatPastTime(time)}</div>
         <Button text="delete" on:click={() => deleteTime(time.id)} />
