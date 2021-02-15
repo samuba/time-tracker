@@ -87,7 +87,7 @@
     <Button on:click={currentUser.logout} text="Logout" />
 </div>
 
-<div class="flex justify-center pt-8">
+<div class="flex justify-center pt-8 pb-4">
     <div class="max-w-md">
         <div class="flex">
             {#if !$currentTime.start}
@@ -104,8 +104,8 @@
             {/if}
         </div>
 
-        {#if pastTimes.length > 0}
-            <div class="mt-10">
+        {#if pastTimes.length > 0}  
+            <div class="mt-10"> 
                 <h2 class="text-xl">
                     Overall: <span class="font-mono">{overall}</span>
                 </h2>

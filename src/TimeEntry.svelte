@@ -79,17 +79,17 @@
         <Button text="Save" on:click={() => save(start, end)} />
     {:else}
         <div>
-            <span class="font-mono text-sm">{formatPastTime(time)}</span>
-            <button
-                on:click={() => deleteTime(time.id)}
-                class="ml-4 underline cursor-pointer"
-                >delete
-            </button>
-            <button
-                on:click={() => (editMode = true)}
-                class="ml-2 underline cursor-pointer"
-                >edit
-            </button>
+            <span class="font-mono text-sm mr-4">{formatPastTime(time)}</span>
+            <div class="inline-block">
+                <button
+                    on:click={() => deleteTime(time.id)}
+                    class="mr-2 underline cursor-pointer">delete</button
+                >
+                <button
+                    on:click={() => (editMode = true)}
+                    class="underline cursor-pointer">edit</button
+                >
+            </div>
         </div>
     {/if}
 </div>
