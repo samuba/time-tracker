@@ -18,5 +18,6 @@ export function initFirebase() {
       messagingSenderId: "191631527516",
       appId: "1:191631527516:web:74b335167125e9e48de099"
     });
+    firebase.firestore().enablePersistence();
   }
 }

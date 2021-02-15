@@ -7,7 +7,6 @@ import { currentUser } from "./userStore";
 initFirebase();
 
 const db = firebase.firestore()
-db.enablePersistence();
 const times = db.collection("times")
 
 export type Time = {
