@@ -10,7 +10,6 @@ A cute little tool to help track the time you spend on something eg. working hou
 [X] Live updating from multiple devices
 [] refine time editing
     - seperate controls for time and date
-    - let minutes be incremented by 1
 [] PWA
     - icon
     - full offline support

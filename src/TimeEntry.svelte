@@ -23,6 +23,7 @@
             altInput: true,
             altFormat: "H:i d.m.Y",
             dateFormat: "Z",
+            minuteIncrement: 1,
         } as BaseOptions;
         flatpickr("#start-" + time.id, options);
         flatpickr("#end-" + time.id, options);
@@ -51,32 +52,40 @@
         )}`;
     };
 
-    const save = async (start: string, end: string) => {
-        editMode = false;
-        await updateTime(time.id, {
+    const save = (start: string, end: string) => {
+        updateTime(time.id, {
             start: new Date(start),
             end: new Date(end),
         });
+        editMode = false;
     };
 </script>
 
 <div class="mt-2">
     {#if editMode}
         <div>
-            <label for={"start-" + time.id}>Start</label>
+            <label
+                for={"start-" + time.id}
+                class="inline-block"
+                style="width: 2.5rem;">Start:</label
+            >
             <input
                 bind:value={start}
                 class="border p-2 m-2"
                 id={"start-" + time.id}
             /><br />
-            <label for={"end-" + time.id}>End</label>
+            <label
+                for={"end-" + time.id}
+                class="inline-block"
+                style="width: 2.5rem;">End:</label
+            >
             <input
                 bind:value={end}
                 class="border p-2 m-2"
                 id={"end-" + time.id}
             />
+            <Button text="OK" on:click={() => save(start, end)} />
         </div>
-        <Button text="Save" on:click={() => save(start, end)} />
     {:else}
         <div>
             <span class="font-mono text-sm mr-4">{formatPastTime(time)}</span>
