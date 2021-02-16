@@ -35,9 +35,9 @@
 
 <div class="flex mt-12 mb-12 justify-center mx-4">
     <div class="max-w-md">
-        <h1 class="text-4xl mb-4">Time-Tracker</h1>
+        <h1 class="text-4xl mb-4">Trackerle</h1>
         <p class="text-lg">
-            A super advanced (just kidding) tool to help track the time you
+            A cute little tool that helps track the time you
             spend on stuff.
         </p>
     </div>

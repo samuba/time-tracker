@@ -1,16 +1,27 @@
-# Time-Tracker
+# Trackerle
 
-A tool to track the time you are spending on something eg. work, projects etc.
-Login via OAUTH and use from mobile and desktop simultaneously.
+A cute little tool to help track the time you spend on something eg. working hours, private projects etc.
 
 [X] start/stop tracking via simple Button> click
 [X] times are editable
-[] show time per day
+[X] show time per day
+[X] Login via Google
+[X] Login via Email
+[X] Live updating from multiple devices
+[] refine time editing
+    - seperate controls for time and date
+    - let minutes be incremented by 1
+[] PWA
+    - icon
+    - full offline support
+[] support more OAUTH Providers
 [] show time per week
 [] show time per month
+[] edit start of current time period (for when you forgot to start tracking)
+[] adding past time periods without start/stop (for when you forgot tracking at all)
+[] do not use firebase development build (see console)
 
 ## Firestore Data Structure:
-### Collections:
 
 users: {
     id

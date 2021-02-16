@@ -1,5 +1,5 @@
 {
-  "name": "time-tracker",
+  "name": "trackerle",
   "version": "0.0.0",
   "scripts": {
     "validate": "svelte-check && tsc --noEmit",

@@ -83,7 +83,7 @@
 </script>
 
 <div class="w-full flex justify-between p-4">
-    <div class="text-2xl">Time-Tracker</div>
+    <div class="text-2xl">Trackerle</div>
     <Button on:click={currentUser.logout} text="Logout" />
 </div>
 
