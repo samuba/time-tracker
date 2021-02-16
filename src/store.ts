@@ -1,3 +1,4 @@
+import { subMilliseconds } from "date-fns";
 import firebase from "firebase"
 import "firebase/firestore"
 import { derived, Readable, readable, writable } from 'svelte/store';
@@ -41,7 +42,7 @@ function createCurrentTime() {
     return {
         subscribe,
         start: async () => { // todo: rename methods because they are confusing with time.start props
-            set(await addTime({ start: new Date(), end: null, userId }))
+            set(await addTime({ start: subMilliseconds(new Date(), 1000), end: null, userId }))
         },
         stop: () => update(n => {
             const end = new Date();

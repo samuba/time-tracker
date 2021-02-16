@@ -7,11 +7,11 @@
     import TimeEntry from "./TimeEntry.svelte";
     import Button from "./Button.svelte";
 
-    let since = "";
+    let since = "00:00:00";
 
     $: pastTimes = $allTimes.filter((x) => x.end != null);
     $: days = getDays(pastTimes);
-    $: overall = calculateOverall($allTimes)
+    $: overall = calculateOverall($allTimes);
 
     const getDays = (times) => {
         const days: Day[] = [];
@@ -58,7 +58,10 @@
     };
 
     const interval = setInterval(() => {
-        if (!$currentTime.start) return;
+        if (!$currentTime.start) {
+            since = "00:00:00";
+            return;
+        }
         since = formatDuration(Number(new Date()) - Number($currentTime.start));
         overall = calculateOverall($allTimes);
     }, 1000);
@@ -87,25 +90,27 @@
     <Button on:click={currentUser.logout} text="Logout" />
 </div>
 
-<div class="flex justify-center pt-8 pb-4">
+<div class="flex justify-center pt-4 pb-4">
     <div class="max-w-md">
-        <div class="flex">
+        <div class="flex flex-wrap justify-center  flex-col">
+            <div class="mb-4 font-mono text-center text-5xl">{since}</div>
             {#if !$currentTime.start}
-                <Button text="Start Timer" on:click={currentTime.start}  class="text-2xl px-4 py-2" />
+                <Button
+                    text="Start Timer"
+                    on:click={currentTime.start}
+                    class="text-3xl py-4"
+                />
             {:else}
                 <Button
                     text="Stop Timer"
                     on:click={currentTime.stop}
-                    class="text-2xl px-4 py-2"
+                    class="text-3xl py-4"
                 />
-                <div class="ml-8 mt-4">
-                    Current Time: <span class="font-mono">{since}</span> 
-                </div>
             {/if}
         </div>
 
-        {#if pastTimes.length > 0}  
-            <div class="mt-10"> 
+        {#if pastTimes.length > 0}
+            <div class="mt-10">
                 <h2 class="text-xl">
                     Overall: <span class="font-mono">{overall}</span>
                 </h2>
