@@ -2,7 +2,7 @@
     export let text: string = ""
 </script>
 
-<button class={"border-gray-300 border rounded px-2 py-1 " + $$props.class} on:click>
+<button class={"border-yellow-400 bg-yellow-300 text-yellow-900  border rounded px-2 py-1 " + $$props.class} on:click>
     {#if text}
         {text}
     {:else}

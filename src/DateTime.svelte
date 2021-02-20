@@ -25,6 +25,6 @@
 <input
     bind:value={innerValue}
     bind:this={element}
-    class={"border p-2 m-2 " + $$props.class}
+    class={"border p-2 m-2 bg-yellow-50 border-yellow-300 rounded " + $$props.class}
     id={$$props.id}
 />

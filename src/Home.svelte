@@ -94,7 +94,7 @@
 
 <div class="w-full flex justify-between p-4">
     <div class="text-2xl">Trackerle</div>
-    <Button on:click={currentUser.logout} text="Logout" />
+    <ButtonLink on:click={currentUser.logout} text="Logout" />
 </div>
 
 <div class="flex justify-center pt-4 pb-4">
@@ -105,7 +105,7 @@
                 <Button
                     text="Start Timer"
                     on:click={() => currentTime.start(alternativeStartTime)}
-                    class="text-3xl py-4"
+                    class="text-3xl py-4 shadow"
                 />
                 <div class="mt-4 text-center">
                     {#if alternativeStartTime}
@@ -142,7 +142,7 @@
                 </h2>
 
                 {#each days as day}
-                    <div class="bg-gray-50 border mt-4 p-4">
+                    <div class="bg-yellow-50 mt-4 p-4 shadow">
                         <div class="text-lg flex justify-between font-mono">
                             <span class="font-semibold">{day.text}</span>
                             {day.overall}
