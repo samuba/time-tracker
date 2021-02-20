@@ -8,15 +8,17 @@ A cute little tool to help track the time you spend on something eg. working hou
 [X] Login via Google
 [X] Login via Email
 [X] Live updating from multiple devices
-[] refine time editing
-    - seperate controls for time and date
+[] edit start of current time period (for when you forgot to start tracking)
+[] implement new firestore structure
+[] show time per week
 [] PWA
     - icon
     - full offline support
+[] refine time editing
+    - seperate controls for time and date
 [] support more OAUTH Providers
-[] show time per week
 [] show time per month
-[] edit start of current time period (for when you forgot to start tracking)
+[] support time spanning multiple days
 [] adding past time periods without start/stop (for when you forgot tracking at all)
 [] do not use firebase development build (see console)
 

@@ -41,8 +41,8 @@ function createCurrentTime() {
     })
     return {
         subscribe,
-        start: async () => { // todo: rename methods because they are confusing with time.start props
-            set(await addTime({ start: subMilliseconds(new Date(), 1000), end: null, userId }))
+        start: async (start = subMilliseconds(new Date(), 1000)) => { // todo: rename methods because they are confusing with time.start props
+            set(await addTime({ start, end: null, userId }))
         },
         stop: () => update(n => {
             const end = new Date();

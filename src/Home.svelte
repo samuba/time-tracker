@@ -6,18 +6,25 @@
     import type { Time } from "./store";
     import TimeEntry from "./TimeEntry.svelte";
     import Button from "./Button.svelte";
+    import DateTime from "./DateTime.svelte";
+    import ButtonLink from "./ButtonLink.svelte";
 
     let since = "00:00:00";
+    let alternativeStartTime = undefined;
 
     $: pastTimes = $allTimes.filter((x) => x.end != null);
     $: days = getDays(pastTimes);
     $: overall = calculateOverall($allTimes);
 
+    const formatDay = (date: Date) => {
+        return isToday(date) ? "Today" : format(date, "dd.MM.yyyy");
+    };
+
     const getDays = (times) => {
         const days: Day[] = [];
         times.forEach((time) => {
             const day = days.filter(
-                (x) => x.text === format(time.start, "dd.MM.yyyy")
+                (x) => x.text === formatDay(time.start)
             )?.[0];
             const overallMs = Number(time.end) - Number(time.start);
             if (day) {
@@ -26,7 +33,7 @@
                 day.overall = formatDuration(day.overallMs);
             } else {
                 days.push({
-                    text: format(time.start, "dd.MM.yyyy"),
+                    text: formatDay(time.start),
                     times: [time],
                     overallMs,
                     overall: formatDuration(overallMs),
@@ -97,13 +104,32 @@
             {#if !$currentTime.start}
                 <Button
                     text="Start Timer"
-                    on:click={currentTime.start}
+                    on:click={() => currentTime.start(alternativeStartTime)}
                     class="text-3xl py-4"
                 />
+                <div class="mt-4 text-center">
+                    {#if alternativeStartTime}
+                        <label for="past-time-start-input" class="mr-2"
+                            >Start Time:</label
+                        >
+                        <DateTime
+                            bind:value={alternativeStartTime}
+                            id="past-time-start-input"
+                        />
+                    {:else}
+                        <ButtonLink
+                            text="Start from the past"
+                            on:click={() => (alternativeStartTime = new Date())}
+                        />
+                    {/if}
+                </div>
             {:else}
                 <Button
                     text="Stop Timer"
-                    on:click={currentTime.stop}
+                    on:click={() => {
+                        currentTime.stop();
+                        alternativeStartTime = undefined;
+                    }}
                     class="text-3xl py-4"
                 />
             {/if}

@@ -2,32 +2,17 @@
     import { format, intervalToDuration } from "date-fns";
     import { deleteTime, updateTime } from "./store";
     import type { Time } from "./store";
-    import flatpickr from "flatpickr";
-    import "flatpickr/dist/flatpickr.css";
-    import type { BaseOptions } from "flatpickr/dist/types/options";
-    import { tick } from "svelte";
     import Button from "./Button.svelte";
+    import DateTime from "./DateTime.svelte";
+    import ButtonLink from "./ButtonLink.svelte";
 
     export let time: Time;
 
     let editMode = false;
-    let start = String(time.start);
-    let end = String(time.end);
-
-    $: if (editMode) tick().then(() => initPickers());
-
-    const initPickers = () => {
-        const options = {
-            enableTime: true,
-            time_24hr: true,
-            altInput: true,
-            altFormat: "H:i d.m.Y",
-            dateFormat: "Z",
-            minuteIncrement: 1,
-        } as BaseOptions;
-        flatpickr("#start-" + time.id, options);
-        flatpickr("#end-" + time.id, options);
-    };
+    let start = time.start;
+    let end = time.end;
+    const startId = `start-${time.id}`;
+    const endId = `end-${time.id}`;
 
     function formatPastTime(time: Time) {
         if (!time.start) return;
@@ -52,11 +37,8 @@
         )}`;
     };
 
-    const save = (start: string, end: string) => {
-        updateTime(time.id, {
-            start: new Date(start),
-            end: new Date(end),
-        });
+    const save = (start: Date, end: Date) => {
+        updateTime(time.id, { start, end });
         editMode = false;
     };
 </script>
@@ -64,40 +46,27 @@
 <div class="mt-2">
     {#if editMode}
         <div>
-            <label
-                for={"start-" + time.id}
-                class="inline-block"
-                style="width: 2.5rem;">Start:</label
-            >
-            <input
-                bind:value={start}
-                class="border p-2 m-2"
-                id={"start-" + time.id}
-            /><br />
-            <label
-                for={"end-" + time.id}
-                class="inline-block"
-                style="width: 2.5rem;">End:</label
-            >
-            <input
-                bind:value={end}
-                class="border p-2 m-2"
-                id={"end-" + time.id}
-            />
+            <label for={startId} class="inline-block" style="width: 2.5rem;">
+                Start:
+            </label>
+            <DateTime bind:value={start} id={startId} />
+            <br />
+            <label for={endId} class="inline-block" style="width: 2.5rem;">
+                End:
+            </label>
+            <DateTime bind:value={end} id={endId} />
             <Button text="OK" on:click={() => save(start, end)} />
         </div>
     {:else}
         <div>
             <span class="font-mono text-sm mr-4">{formatPastTime(time)}</span>
             <div class="inline-block">
-                <button
+                <ButtonLink
+                    text="delete"
                     on:click={() => deleteTime(time.id)}
-                    class="mr-2 underline cursor-pointer">delete</button
-                >
-                <button
-                    on:click={() => (editMode = true)}
-                    class="underline cursor-pointer">edit</button
-                >
+                    class="mr-2"
+                />
+                <ButtonLink text="edit" on:click={() => (editMode = true)} />
             </div>
         </div>
     {/if}
