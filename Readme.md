@@ -9,6 +9,7 @@ A cute little tool to help track the time you spend on something eg. working hou
 [X] Login via Email
 [X] Live updating from multiple devices
 [X] edit start of current time period (for when you forgot to start tracking)
+[] show current time in daily time
 [] implement new firestore structure
 [] show time per week
 [] PWA
