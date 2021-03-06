@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { allTimes, currentTime } from "./store";
+    import { allTimes, currentTime, now } from "./store";
     import { currentUser } from "./userStore";
     import { format, intervalToDuration, isToday } from "date-fns";
     import { onDestroy } from "svelte";
@@ -9,24 +9,24 @@
     import DateTime from "./DateTime.svelte";
     import ButtonLink from "./ButtonLink.svelte";
 
-    let since = "00:00:00";
     let alternativeStartTime = undefined;
 
-    $: pastTimes = $allTimes.filter((x) => x.end != null);
-    $: days = getDays(pastTimes);
-    $: overall = calculateOverall($allTimes);
+    $: since = $currentTime.start ? formatDuration(Number($now) - Number($currentTime.start)) : "00:00:00"
+    $: pastTimes = $allTimes;
+    $: days = getDays(pastTimes, $now);
+    $: overall = calculateOverall($allTimes, $now);
 
     const formatDay = (date: Date) => {
         return isToday(date) ? "Today" : format(date, "dd.MM.yyyy");
     };
 
-    const getDays = (times) => {
+    const getDays = (times, now: Date) => {
         const days: Day[] = [];
         times.forEach((time) => {
             const day = days.filter(
                 (x) => x.text === formatDay(time.start)
             )?.[0];
-            const overallMs = Number(time.end) - Number(time.start);
+            const overallMs = Number(time.end || now) - Number(time.start);
             if (day) {
                 day.times.push(time);
                 day.overallMs += overallMs;
@@ -43,10 +43,10 @@
         return days;
     };
 
-    const calculateOverall = (times: Time[]) => {
+    const calculateOverall = (times: Time[], now: Date) => {
         if (!times.length) return "";
         const accumulatedTimes = times
-            .map((x) => Number(x.end || new Date()) - Number(x.start))
+            .map((x) => Number(x.end || now) - Number(x.start))
             .reduce((p, c) => p + c);
         return formatDuration(accumulatedTimes);
     };
@@ -63,16 +63,6 @@
             seconds
         )}`;
     };
-
-    const interval = setInterval(() => {
-        if (!$currentTime.start) {
-            since = "00:00:00";
-            return;
-        }
-        since = formatDuration(Number(new Date()) - Number($currentTime.start));
-        overall = calculateOverall($allTimes);
-    }, 1000);
-    onDestroy(() => clearInterval(interval));
 
     type Day = {
         text: string;

@@ -19,6 +19,11 @@ export type Time = {
 export type NewTime = Omit<Time, "id">
 
 
+export const now = readable(new Date(), (set) => {
+	const interval = setInterval(() => set(new Date()), 1000);
+	return () => clearInterval(interval);
+});
+
 // todo: use convert function to convert to own data model
 function extractData(snapshot) {
     const data = snapshot.data()
