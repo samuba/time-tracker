@@ -10,7 +10,6 @@ endOfWeek,
     isToday,
     startOfWeek,
   } from "date-fns";
-  import { onDestroy } from "svelte";
   import type { Time } from "./store";
   import TimeEntry from "./TimeEntry.svelte";
   import Button from "./Button.svelte";
@@ -120,7 +119,7 @@ endOfWeek,
 
 <div class="w-full flex justify-between p-4">
     <div class="flex">
-        <img src="../assets/chronometer.svg" class="h-10 mr-2 -mt-1" alt="logo">
+        <img src="favicon.svg" class="h-10 mr-2 -mt-1" alt="logo">
         <div class="text-2xl">Trackerle</div>
     </div>
   <ButtonLink on:click={currentUser.logout} text="Logout" />
