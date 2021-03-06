@@ -35,7 +35,10 @@
 
 <div class="flex mt-12 mb-12 justify-center mx-4">
     <div class="max-w-md">
-        <h1 class="text-4xl mb-4">Trackerle</h1>
+        <h1 class="text-4xl mb-4 flex">
+            <img src="../assets/chronometer.svg" class="h-14 mr-2 -mt-3" alt="logo">
+            <span>Trackerle</span>
+        </h1>
         <p class="text-lg">
             A cute little tool that helps track the time you
             spend on stuff.

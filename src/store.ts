@@ -24,8 +24,7 @@ export const now = readable(new Date(), (set) => {
 	return () => clearInterval(interval);
 });
 
-// todo: use convert function to convert to own data model
-function extractData(snapshot) {
+function extractData(snapshot: firebase.firestore.QueryDocumentSnapshot) {
     const data = snapshot.data()
     data.start = data.start ? data.start.toDate() : null
     data.end = data.end ? data.end.toDate() : null
